@@ -10,6 +10,7 @@ const dayObj = {
 	totalCalories: 0,
 	totalHours: 0
 };
+let totalWeek = {};
 
 class App extends React.Component {
 	constructor(props) {
@@ -78,14 +79,37 @@ class App extends React.Component {
 
 		return newWeek;
 	}
+
+	countNumberOfStepsInOneWeek(arr) {
+		let totalWeekSteps = 0;
+		let totalWeekKM = 0;
+		let totalWeekCalories = 0;
+		let totalWeekHours = 0;
+
+		arr.forEach(item => {
+			totalWeek = {
+				totalWeekSteps: totalWeekSteps += item.totalSteps,
+				totalWeekKM: totalWeekKM += item.totalKM,
+				totalWeekCalories: totalWeekCalories += item.totalCalories,
+				totalWeekHours: totalWeekHours += item.totalHours
+			}
+		});
+
+		return totalWeek;
+	}
+
 		
 	render() {
-		const allStepsByDay = this.countNumberOfStepsInOneDay(this.state.data);
+		const { data, weekObj } = this.state;
+		const allStepsByDay = this.countNumberOfStepsInOneDay(data);
 		this.populateObj(allStepsByDay);
-		console.log(this.state.weekObj);
+		this.countNumberOfStepsInOneWeek(weekObj);
 		return (
 			<div>
-				Test
+				<header className="heaeder">
+					<h1 className="header__title">Welcome</h1>
+					<span className="header__subtile">Overview of your activity</span>
+				</header>
 			</div>
 		);
 	}
