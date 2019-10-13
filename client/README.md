@@ -1,4 +1,4 @@
-React News App
+React Fitness tracker App
 
 Project setup
 1. npm install
