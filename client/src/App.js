@@ -1,10 +1,37 @@
 import React from 'react';
 import config from './config';
 import axios from 'axios';
+import Card from '../src/components/Card/Card';
+import CalendarItem from './components/CalendarItem/CalendarItem';
+import SingleDay from './components/SingleDay/SingleDay';
+import Header from './components/Header/Header';
 
-const dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+const dayNames = [
+	{
+		day: 'Monday',
+		date: 10
+	},
+	{
+		day: 'Tuesday',
+		date: 11
+	},
+	{
+		day: 'Wednesday',
+		date: 12
+	},
+	{
+		day: 'Thursday',
+		date: 13
+	},
+	{
+		day: 'Friday',
+		date: 14
+	}
+]
+
 const dayObj = {
 	day: '',
+	date: '',
 	totalSteps: 0,
 	totalKM: 0,
 	totalCalories: 0,
@@ -17,7 +44,9 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			data: [],
-			weekObj: []
+			weekObj: [],
+			activeDay: '',
+			isActive: false
 		}
 	}
 
@@ -41,31 +70,48 @@ class App extends React.Component {
 
 	componentDidMount() {
 		this.fetchData().then(res => {
-			dayNames.forEach(day => this.setState({
-				weekObj: [...this.state.weekObj, {...dayObj, day}]
-			}));
+			dayNames.forEach(item => {
+				const day = item.day;
+				const date = item.date;
+				this.setState({
+					weekObj: [...this.state.weekObj, {...dayObj, day, date}]
+				});
+			});
 		});
-	}
-
-	countNumberOfStepsInOneDay(arr) {
-		const allStepsByDay = {};
-	
-		arr.forEach(({ timestamp, steps }) => {
-			const date = new Date(timestamp);
-			const dayName = dayNames[date.getDay() - 1]; // -1 because we start from monday
-			if (!(dayName in allStepsByDay)) {
-				allStepsByDay[dayName] = 0;
-			}
-	
-			allStepsByDay[dayName] += steps;
-		});
-	
-		return allStepsByDay;
 	}
 
 	calcTotalKM = (steps) => Math.round((steps) * 0.762);
 	calcTotalCalories = (steps) => Math.round((steps) * 0.05);
 	calcTotalHours = (steps) => Math.round((steps) * 0.5);
+
+	countNumberOfStepsInOneDay(arr) {
+		const allStepsByDay = {};
+		arr.forEach(({ timestamp, steps }) => {
+			const date = new Date(timestamp);
+			const dayName = dayNames[date.getDay() - 1]; // -1 because we start from monday
+			if (!(dayName.day in allStepsByDay)) {
+				allStepsByDay[dayName.day] = 0;
+			}
+			allStepsByDay[dayName.day] += steps;
+		});
+		return allStepsByDay;
+	}
+
+	countNumberOfStepsInOneWeek(arr) {
+		let totalWeekSteps = 0;
+		let totalWeekKM = 0;
+		let totalWeekCalories = 0;
+		let totalWeekHours = 0;
+		arr.forEach(item => {
+			totalWeek = {
+				totalWeekSteps: totalWeekSteps += item.totalSteps,
+				totalWeekKM: totalWeekKM += item.totalKM,
+				totalWeekCalories: totalWeekCalories += item.totalCalories,
+				totalWeekHours: totalWeekHours += item.totalHours
+			}
+		});
+		return totalWeek;
+	}
 
 	populateObj(allStepsByDay) {
 		const newWeek = this.state.weekObj.map(obj => {
@@ -76,40 +122,68 @@ class App extends React.Component {
 			obj.totalHours = this.calcTotalHours(steps);
 			return obj;
 		});
-
 		return newWeek;
 	}
 
-	countNumberOfStepsInOneWeek(arr) {
-		let totalWeekSteps = 0;
-		let totalWeekKM = 0;
-		let totalWeekCalories = 0;
-		let totalWeekHours = 0;
-
-		arr.forEach(item => {
-			totalWeek = {
-				totalWeekSteps: totalWeekSteps += item.totalSteps,
-				totalWeekKM: totalWeekKM += item.totalKM,
-				totalWeekCalories: totalWeekCalories += item.totalCalories,
-				totalWeekHours: totalWeekHours += item.totalHours
-			}
-		});
-
-		return totalWeek;
+	handleClick = (getDay) => (e) => {
+		this.setState({
+			activeDay: getDay,
+			isActive: true
+		})
 	}
 
-		
+	handleIsActiveSingleDay = (isActive) => {
+		this.setState({
+			isActive: !isActive
+		})
+	}
+
 	render() {
-		const { data, weekObj } = this.state;
-		const allStepsByDay = this.countNumberOfStepsInOneDay(data);
-		this.populateObj(allStepsByDay);
+		const { data, activeDay, isActive, weekObj } = this.state;
+		this.populateObj(this.countNumberOfStepsInOneDay(data));
 		this.countNumberOfStepsInOneWeek(weekObj);
+
 		return (
-			<div>
-				<header className="heaeder">
-					<h1 className="header__title">Welcome</h1>
-					<span className="header__subtile">Overview of your activity</span>
-				</header>
+			<div className="main">
+
+				<Header title="Welcome!" subtitle="Overview of your activity" isActive={isActive} />
+
+				<div className="calendar__wrapper">
+					{weekObj && weekObj.map((item, index) => {
+						return (
+							<CalendarItem
+								handleClick={this.handleClick}
+								key={index} 
+								day={item.day}
+								date={item.date}
+							/>
+						)
+					})}
+				</div>
+
+				<Card
+					cardClass="card--large"
+					title="Activity"
+					subtitle="Average"
+					iconName="icon-timer"
+					totalWeekActivity={totalWeek.totalWeekHours}
+				/>
+				<Card
+					title="Steps"
+					subtitle="Total"
+					iconName="icon-run"
+					totalWeekActivity={totalWeek.totalWeekSteps}
+				/>
+				<Card
+					title="Calories"
+					subtitle="Total Burned"
+					iconName="icon-burn"
+					totalWeekActivity={totalWeek.totalWeekCalories}
+				/>
+				<div className={isActive ? `single-day__wrapper single-day__wrapper--active` : `single-day__wrapper`}>
+					{weekObj && weekObj.map((item, index) => item.day === activeDay ? <SingleDay key={index} weekActivity={item} isActive={isActive} handleIsActiveSingleDay={this.handleIsActiveSingleDay} /> : '')}
+				</div>
+		
 			</div>
 		);
 	}

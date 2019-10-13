@@ -1,0 +1,25 @@
+@import '../../styles/main';
+
+.calendar__wrapper {
+    display: flex;
+    justify-content: space-between
+}
+
+.calendar__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border: 0;
+    border-radius: 23px;
+    background-color: rgba($white, .25);
+    transition: $dur $ease;
+}
+
+.calendar__item-text {
+    display: block;
+    color: rgba($white, .75);
+    text-transform: uppercase;
+}

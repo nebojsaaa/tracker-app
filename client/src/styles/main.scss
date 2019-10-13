@@ -1,0 +1,67 @@
+@import './config/reset';
+@import './config/fonts';
+@import './config/variables';
+@import './helpers/mixins';
+
+*,
+html,
+body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: $font-default;
+	&::before,
+	&::after {
+		box-sizing: border-box;
+	}
+}
+
+.main {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	padding: 20px;
+	background: linear-gradient(to bottom, $light-green, $blue);
+}
+
+.icon-timer {
+    &::after {
+        content: url('../assets/icons/timer.svg');
+    }
+}
+
+.icon-run {
+    &::after {
+        content: url('../assets/icons/run.svg');
+    }
+}
+
+.icon-burn {
+    &::after {
+        content: url('../assets/icons/burn.svg');
+    }
+}
+
+.calendar__wrapper {
+    margin-bottom: 30px;
+}
+
+.single-day__wrapper {
+    position: fixed;
+    right: -100%;
+    top: 260px;
+    width: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: $white;
+    border-radius: 28px;
+    transition: $dur $ease;
+}
+
+.single-day__wrapper--active {
+    right: 20px;
+}
+
+

@@ -1,0 +1,61 @@
+@import '../../styles/main';
+
+.card {
+    position: relative;
+    padding: 20px 20px 20px 80px;
+    background-color: rgba($white, .25);
+    border-radius: 28px;
+    margin-bottom: 15px;
+}
+
+.card--large {
+    .card__wrapper {
+        flex-direction: column;
+    }
+
+    .card__subtitle {
+        display: block;
+        margin-bottom: 25px;
+    }
+
+    .card__number {
+        margin-bottom: 25px;
+    }
+}
+
+.card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 45px;
+    height: 45px;
+    background-color: rgba($white, .25);
+    border-radius: 50%;
+}
+
+.card__wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card__title {
+    font-size: 20px;
+    font-weight: $medium;
+    color: $white;
+}
+
+.card__subtitle {
+    font-weight: $medium;
+    color: rgba($white, .70)
+}
+
+.card__number {
+    font-size: 38px;
+    font-weight: $bold;
+    color: $white;
+}
+
+

@@ -1,0 +1,59 @@
+@import '../../styles/main.scss';
+
+.header {
+    padding: 25px;
+    background-color: $white;
+    border-radius: 28px;
+    margin-bottom: 30px;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity $dur $ease, visibility $dur $ease;
+}
+
+.header--active {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: calc(100% - 40px);
+    padding: 26px 26px 26px 60px;
+    background-color: rgba($white, .25);
+    .header__title,
+    .header__subtitle {
+        color: $white;
+    }
+}
+
+.header--inactive {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.header__title {
+    font-size: 43px;
+    line-height: 41px;
+    font-weight: $bold;
+    color: $green;
+    margin-bottom: 10px;
+}
+
+.header__subtitle {
+    color: $grey;
+}
+
+.header__btn {
+    background-color: transparent;
+    border: 0;
+    font-size: 0;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+}
+
+.icon-chevron-left {
+    &::after {
+        content: url('../../assets/icons/chevron-left.svg');
+    }
+}
+
+
